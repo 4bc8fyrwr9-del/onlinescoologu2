@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Презентация проекта: «ПОД КЛЮЧ»</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        
+        body { 
+            background: #0f172a; 
+            background: radial-gradient(circle at top left, #1e1b4b, #0f172a);
+            color: #f8fafc; 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 15px; 
+        }
+        
+        .pres-container { 
+            width: 100%; 
+            max-width: 900px; 
+            background: rgba(255, 255, 255, 0.06); 
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 24px; 
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6); 
+            overflow: hidden; 
+            display: flex; 
+            flex-direction: column; 
+            min-height: 620px; 
+            justify-content: space-between;
+        }
+        
+        .slide { 
+            display: none; 
+            padding: 30px 25px; 
+            flex-direction: column; 
+            justify-content: flex-start; 
+            align-items: center; 
+            flex: 1; 
+            text-align: center; 
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        .slide.active { display: flex; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .badge { 
+            background: rgba(99, 102, 241, 0.2); 
+            color: #818cf8; 
+            padding: 5px 14px; 
+            border-radius: 16px; 
+            font-weight: 700; 
+            font-size: 12px; 
+            margin-bottom: 12px; 
+            display: inline-block; 
+            text-transform: uppercase;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            letter-spacing: 0.5px;
+        }
+        
+        h1 { font-size: 28px; font-weight: 900; color: #ffffff; margin-bottom: 10px; line-height: 1.25; }
+        h2 { font-size: 24px; font-weight: 800; color: #ffffff; margin-bottom: 8px; }
+        p.desc { color: #94a3b8; font-size: 14px; max-width: 580px; margin-bottom: 16px; line-height: 1.5; }
+        
+        /* Сетки */
+        .grid-wordstat { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; margin-top: 10px; }
+        .ws-box { background: rgba(0,0,0,0.25); border-radius: 12px; padding: 6px; border: 1px solid rgba(255,255,255,0.06); text-align: center; }
+        .ws-box img { width: 100%; height: 110px; object-fit: cover; border-radius: 8px; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); transition: transform 0.2s; }
+        .ws-box img:hover { transform: scale(1.02); }
+        .ws-box span { font-size: 11px; color: #94a3b8; display: block; margin-top: 5px; font-weight: 600; }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; width: 100%; text-align: left; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 100%; text-align: left; }
+
+        /* Карточки */
+        .cards-list { width: 100%; display: flex; flex-direction: column; gap: 10px; text-align: left; }
+        .card { border-radius: 14px; padding: 14px 18px; border: 1px solid rgba(255, 255, 255, 0.08); background: rgba(255, 255, 255, 0.03); }
+        .card h3 { font-size: 14px; font-weight: 700; margin-bottom: 6px; color: #818cf8; }
+        .card ul { list-style: none; color: #cbd5e1; font-size: 13px; line-height: 1.5; }
+        .card ul li { margin-bottom: 4px; }
+
+        /* Преподаватели (общий список) */
+        .teachers-list { display: flex; flex-direction: column; gap: 10px; width: 100%; margin-top: 10px; }
+        .teacher-box { background: rgba(255, 255, 255, 0.03); border-radius: 14px; padding: 12px 16px; border: 1px solid rgba(255, 255, 255, 0.08); display: flex; align-items: center; gap: 14px; text-align: left; width: 100%; }
+        .teacher-box img { width: 62px; height: 62px; border-radius: 50%; object-fit: cover; border: 2px solid #4f46e5; flex-shrink: 0; }
+        .teacher-info h3 { font-size: 15px; margin-bottom: 2px; color: #ffffff; }
+        .teacher-info p { font-size: 12px; font-weight: 600; color: #818cf8; margin-bottom: 4px; }
+        .teacher-info ul { list-style: none; font-size: 11px; color: #94a3b8; line-height: 1.4; }
+
+        /* Персональная карточка участника (Слайды 7, 8, 9) */
+        .person-hero-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(99, 102, 241, 0.25);
+            border-radius: 20px;
+            padding: 24px;
+            width: 100%;
+            display: flex;
+            gap: 24px;
+            align-items: center;
+            text-align: left;
+            margin-top: 10px;
+        }
+        .person-avatar-large {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #6366f1;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+            flex-shrink: 0;
+        }
+        .person-details h2 { font-size: 22px; color: #ffffff; margin-bottom: 4px; }
+        .person-tag { display: inline-block; padding: 3px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; margin-bottom: 10px; }
+        .tag-math { background: #dcfce7; color: #16a34a; }
+        .tag-it { background: #e0f2fe; color: #0284c7; }
+        .tag-rus { background: #f3e8ff; color: #9333ea; }
+
+        /* Кнопки управления */
+        .controls { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 14px 24px; 
+            background: rgba(0, 0, 0, 0.35); 
+            border-top: 1px solid rgba(255, 255, 255, 0.08); 
+        }
+        .btn { 
+            background: #4f46e5; 
+            color: white; 
+            border: none; 
+            padding: 10px 20px; 
+            border-radius: 12px; 
+            font-weight: 700; 
+            font-size: 13px; 
+            cursor: pointer; 
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3); 
+            transition: all 0.2s;
+        }
+        .btn:hover { background: #4338ca; }
+        .btn:disabled { background: #334155; opacity: 0.4; cursor: not-allowed; box-shadow: none; }
+        .counter { font-size: 13px; font-weight: 700; color: #94a3b8; }
+
+        /* Модалка для увеличения скринов */
+        #modal { display: none; position: fixed; z-index: 1000; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; padding: 15px; }
+        #modal img { max-width: 95%; max-height: 85vh; border-radius: 12px; border: 1px solid #4f46e5; box-shadow: 0 0 30px rgba(0,0,0,0.8); }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 22px; }
+            h2 { font-size: 18px; }
+            .grid-wordstat { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+            .ws-box img { height: 85px; }
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+            .person-hero-card { flex-direction: column; text-align: center; }
+            .pres-container { min-height: auto; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="pres-container">
+
+    <!-- ==================== СЛАЙД 1: ОЗНАКОМИТЕЛЬНЫЙ ==================== -->
+    <div class="slide active" id="slide1">
+        <span class="badge">Стартап-проект</span>
+        <h1>Добро пожаловать в «ПОД КЛЮЧ»</h1>
+        <p class="desc">
+            Мы — современная образовательная экосистема. Помогаем школьникам уверенно сдавать ЕГЭ, разбираться в сложных темах без зубрежки и поступать в топовые вузы страны на бюджет.
+        </p>
+        <div class="cards-list">
+            <div class="card">
+                <h3>💡 Что мы делаем?</h3>
+                <ul>
+                    <li>• Даем качественную подготовку без лишней «воды» и стресса.</li>
+                    <li>• Объединяем технологии, удобную платформу и сильных наставников.</li>
+                </ul>
+            </div>
+        </div>
+        <div style="font-size: 45px; margin-top: 15px; filter: drop-shadow(0 0 15px #4f46e5);">🚀</div>
+    </div>
+
+    <!-- ==================== СЛАЙД 2: АНАЛИТИКА ЧАСТЬ 1 ==================== -->
+    <div class="slide" id="slide2">
+        <span class="badge">Рыночный анализ (1/2)</span>
+        <h2>Динамика и общий спрос</h2>
+        <p class="desc" style="font-size: 13px; margin-bottom: 8px;">Статистика поисковых запросов и сезонность</p>
+        
+        <div class="grid-wordstat">
+            <div class="ws-box"><img src="https://unlimbot.hb.ru-msk.vkcloud-storage.ru/uploads/89daca33c676414e80c53923a9d6a491c6b3a1bebb64eb1d.jpg" onclick="openFull(this.src)"><span>Общий спрос</span></div>
+            <div class="ws-box"><img src="https://unlimbot.hb.ru-msk.vkcloud-storage.ru/uploads/14080c13cc83429b84685c288694bcb572f47a49f96596de.jpg" onclick="openFull(this.src)"><span>Динамика</span></div>
+            <div class="ws-box"><img src="https://unlimbot.hb.ru-msk.vkcloud-storage.ru/uploads/549d78d3e49a426aabd289559af07f4955fbe5e540bb198b.jpg" onclick="openFull(this.src)"><span>Сезонность</span></div>
+        </div>
+
+        <div class="cards-list" style="margin-top: 12px;">
+            <div class="card">
+                <h3>📊 Выводы по рынку:</h3>
+                <ul>
+                    <li>• Более 149 000 человек ежемесячно ищут онлайн-школы для сдачи ЕГЭ.</li>
+                    <li>• Пики активности приходятся на осень и зиму — идеальное время для запуска.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== СЛАЙД 3: АНАЛИТИКА ЧАСТЬ 2 ==================== -->
+    <div class="slide" id="slide3">
+        <span class="badge">Рыночный анализ (2/2)</span>
+        <h2>Регионы и конкуренция</h2>
+        <p class="desc" style="font-size: 13px; margin-bottom: 8px;">Аффинити-индексы и брендовые запросы</p>
+        
+        <div class="grid-wordstat">
+            <div class="ws-box"><img src="https://unlimbot.hb.ru-msk.vkcloud-storage.ru/uploads/233c2dc24acc41e1ba33eb45f72f3b293ae235cc1c7b046f.jpg" onclick="openFull(this.src)"><span>Регионы РФ</span></div>
+            <div class="ws-box"><img src="https://unlimbot.hb.ru-msk.vkcloud-storage.ru/uploads/deaf8b4ec6eb4a0896fcadc81e4a3a53941cc0dc1ab6f1a6.jpg" onclick="openFull(this.src)"><span>Прогноз</span></div>
+            <div class="ws-box"><img src="https://unlimbot.hb.ru-msk.vkcloud-storage.ru/uploads/fef87f82a31148b6b6f2bc36b7300d27f8e82d958cf6c196.jpg" onclick="openFull(this.src)"><span>Конкуренты</span></div>
+        </div>
+
+        <div class="cards-list" style="margin-top: 12px;">
+            <div class="card">
+                <h3>🎯 География и охват:</h3>
+                <ul>
+                    <li>• Высокий интерес не только в Москве, но и в регионах (Казань, Поволжье).</li>
+                    <li>• Огромная ниша для качественного и честного продукта.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== СЛАЙД 4: ПРОТОТИП ПРОДУКТА ДОРАБОТКА ==================== -->
+    <div class="slide" id="slide4">
+        <span class="badge">Прототип продукта • Доработка</span>
+        <h2>Архитектура MVP & Планы разработки</h2>
+        <p class="desc">Текущая версия продукта на Vercel и план технических улучшений</p>
+        
+        <div class="grid-2">
+            <div class="card">
+                <h3>🛠 Что реализовано в MVP:</h3>
+                <ul>
+                    <li>• Развернута рабочая web-платформа на Vercel с быстрой загрузкой.</li>
+                    <li>• Презентационный лендинг с описанием направлений ЕГЭ/ОГЭ.</li>
+                    <li>• Адаптивная верстка под десктопные ПК и мобильные экраны.</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>🚀 Направления доработки:</h3>
+                <ul>
+                    <li>• Интеграция личного кабинета ученика с аналитикой прогресса.</li>
+                    <li>• Модуль интерактивных онлайн-тестов с автопроверкой по критериям ФИПИ.</li>
+                    <li>• Подключение Telegram-бота для домашних заданий и напоминаний.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card" style="width: 100%; margin-top: 10px; background: rgba(99, 102, 241, 0.08); border-color: rgba(99, 102, 241, 0.25);">
+            <p style="font-size: 13px; color: #818cf8; margin: 0; text-align: center;">
+                <strong>Статус проекта:</strong> Готов рабочий прототип интерфейса, ведется разработка интерактивных учебных модулей.
+            </p>
+        </div>
+    </div>
+
+    <!-- ==================== СЛАЙД 5: АКТУАЛЬНОСТЬ ССЫЛАЯСЬ НА ФАКТЫ ==================== -->
+    <div class="slide" id="slide5">
+        <span class="badge">Актуальность • Факты</span>
+        <h2>Почему проект актуален прямо сейчас?</h2>
+        <p class="desc">Факторы рынка, подтвержденные статистикой и запросами пользователей</p>
+        
+        <div class="grid-3">
+            <div class="card">
+                <h3>📈 Рост цен репетиторов</h3>
+                <p style="font-size: 12px; color: #cbd5e1; line-height: 1.5;">
+                    Стоимость очных репетиторов выросла на <strong>35–40%</strong> за 2 года. Родители ищут доступную альтернативу с тем же качеством.
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>📍 Дефицит кадров в регионах</h3>
+                <p style="font-size: 12px; color: #cbd5e1; line-height: 1.5;">
+                    В небольших городах нет доступа к экспертам ЕГЭ из МГУ и ВШЭ. Онлайн-платформа стирает географические границы.
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>📊 Спрос > 4.2 млн</h3>
+                <p style="font-size: 12px; color: #cbd5e1; line-height: 1.5;">
+                    По данным Яндекс.Вордстат, сезонный интерес к дистанционной подготовке растет на <strong>+20% ежегодно</strong>.
+                </p>
+            </div>
+        </div>
+
+        <div class="cards-list" style="margin-top: 10px;">
+            <div class="card" style="border-left: 4px solid #10b981;">
+                <h3 style="color: #10b981;">✅ Главный факт актуальности:</h3>
+                <p style="font-size: 13px; color: #f8fafc;">
+                    «ПОД КЛЮЧ» закрывает главную боль: дает подготовку уровня столичных топ-школ по цене в 3 раза ниже репетитора.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== СЛАЙД 6: КОМАНДА (ОБЩЕЕ ПРЕДСТАВЛЕНИЕ) ==================== -->
+    <div class="slide" id="slide6">
+        <span class="badge">Команда проекта</span>
+        <h2>Наша Команда</h2>
+        <p class="desc" style="font-size: 13px; margin-bottom: 8px;">Эксперты, создающие продукт и отвечающие за результат</p>
+
+        <div class="teachers-list">
+            <!-- Препод 1 -->
+            <div class="teacher-box">
+                <img src="https://unlimbot.hb.ru-msk.vkcloud-storage.ru/uploads/b0559c7d42ff4b52a54412ceaee4ee16e640fd2e8bb7afb3.jpg">
+                <div class="teacher-info">
+                    <div style="background: #dcfce7; color: #16a34a; padding: 2px 6px; border-radius: 6px; font-size: 9px; font-weight: 700; display: inline-block; margin-bottom: 2px;">ЕГЭ на 100 баллов</div>
+                    <h3>Никидрончик мефедрончтк</h3>
+                    <p>Преподаватель математики / Project Lead</p>
+                    <ul>
+                        <li>🎓 Окончил МГУ им. Ломоносова | 🚀 40k+ на бензин за месяц</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Препод 2 -->
+            <div class="teacher-box">
+                <img src="https://unlimbot.hb.ru-msk.vkcloud-storage.ru/uploads/be5faa5830a14e71ab9faf8dfdf8743841df1fb8de799a38.jpg">
+                <div class="teacher-info">
+                    <div style="background: #e0f2fe; color: #0284c7; padding: 2px 6px; border-radius: 6px; font-size: 9px; font-weight: 700; display: inline-block; margin-bottom: 2px;">ЕГЭ на 98 баллов</div>
+                    <h3>Максим Кузнецов</h3>
+                    <p>Преподаватель информатики / Python</p>
+                    <ul>
+                        <li>🎓 Окончил НИУ ВШЭ | 💻 Data Analyst</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Препод 3 -->
+            <div class="teacher-box">
+                <img src="https://unlimbot.hb.ru-msk.vkcloud-storage.ru/uploads/59b1b18a36d4409ba5b5929708fdb54a77bc23eb6912d794.jpg">
+                <div class="teacher-info">
+                    <div style="background: #f3e8ff; color: #9333ea; padding: 2px 6px; border-radius: 6px; font-size: 9px; font-weight: 700; display: inline-block; margin-bottom: 2px;">Эксперт ЕГЭ</div>
+                    <h3>Павел Тупенков</h3>
+                    <p>Преподаватель русского языка</p>
+                    <ul>
+                        <li>🎓 СПбГУ, филфак | 🍹 Знает все ловушки барменов</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== СЛАЙД 7: ПЕРСОНАЛЬНО — УЧАСТНИК 1 ==================== -->
+    <div class="slide" id="slide7">
+        <span class="badge">Команда • Участник 1</span>
+        <h2>Никидрончик</h2>
+        <p class="desc" style="font-size: 13px; margin-bottom: 6px;">Project Lead & Преподаватель математики</p>
+
+        <div class="person-hero-card">
+            <img src="https://unlimbot.hb.ru-msk.vkcloud-storage.ru/uploads/b0559c7d42ff4b52a54412ceaee4ee16e640fd2e8bb7afb3.jpg" class="person-avatar-large" alt="Никидрончик">
+            <div class="person-details">
+                <h2>Никидрончик мефедрончтк</h2>
+                <span class="person-tag tag-math">ЕГЭ на 100 баллов • МГУ им. Ломоносова</span>
+                <div class="cards-list">
+                    <div class="card" style="padding: 10px 14px;">
+                        <h3 style="color: #38bdf8;">Зона ответственности в стартапе:</h3>
+                        <ul>
+                            <li>• Общее руководство проектом и архитектура платформы.</li>
+                            <li>• Разработка методики интенсивной подготовки к профильной математике (ЕГЭ).</li>
+                            <li>• Контроль качества продукта и координация запуска MVP.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== СЛАЙД 8: ПЕРСОНАЛЬНО — УЧАСТНИК 2 ==================== -->
+    <div class="slide" id="slide8">
+        <span class="badge">Команда • Участник 2</span>
+        <h2>Максим Кузнецов</h2>
+        <p class="desc" style="font-size: 13px; margin-bottom: 6px;">Преподаватель информатики & Data Analyst</p>
+
+        <div class="person-hero-card">
+            <img src="https://unlimbot.hb.ru-msk.vkcloud-storage.ru/uploads/be5faa5830a14e71ab9faf8dfdf8743841df1fb8de799a38.jpg" class="person-avatar-large" alt="Максим Кузнецов">
+            <div class="person-details">
+                <h2>Максим Кузнецов</h2>
+                <span class="person-tag tag-it">ЕГЭ на 98 баллов • НИУ ВШЭ</span>
+                <div class="cards-list">
+                    <div class="card" style="padding: 10px 14px;">
+                        <h3 style="color: #38bdf8;">Зона ответственности в стартапе:</h3>
+                        <ul>
+                            <li>• Программирование интерактивных модулей тестирования и Python-тренажеров.</li>
+                            <li>• Анализ рыночных метрик спроса (Яндекс Вордстат) и воронки пользователей.</li>
+                            <li>• Подготовка авторских разборов сложных олимпиадных задач и ЕГЭ по информатике.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== СЛАЙД 9: ПЕРСОНАЛЬНО — УЧАСТНИК 3 ==================== -->
+    <div class="slide" id="slide9">
+        <span class="badge">Команда • Участник 3</span>
+        <h2>Павел Тупенков</h2>
+        <p class="desc" style="font-size: 13px; margin-bottom: 6px;">Эксперт ЕГЭ & Преподаватель русского языка</p>
+
+        <div class="person-hero-card">
+            <img src="https://unlimbot.hb.ru-msk.vkcloud-storage.ru/uploads/59b1b18a36d4409ba5b5929708fdb54a77bc23eb6912d794.jpg" class="person-avatar-large" alt="Павел Тупенков">
+            <div class="person-details">
+                <h2>Павел Тупенков</h2>
+                <span class="person-tag tag-rus">СПбГУ, филфак • Эксперт ЕГЭ</span>
+                <div class="cards-list">
+                    <div class="card" style="padding: 10px 14px;">
+                        <h3 style="color: #38bdf8;">Зона ответственности в стартапе:</h3>
+                        <ul>
+                            <li>• Разработка методической базы и алгоритмов проверки сочинений ЕГЭ.</li>
+                            <li>• Создание авторских конспектов без «воды» и ловушек в тестовой части.</li>
+                            <li>• Управление качеством контента и работа с обратной связью учеников.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== СЛАЙД 10: ФИНАЛ ==================== -->
+    <div class="slide" id="slide10">
+        <span class="badge">Заключение</span>
+        <h1>МЫ — ЛУЧШАЯ ШКОЛА</h1>
+        <p style="color: #94a3b8; font-size: 15px; margin-top: 10px; max-width: 520px; line-height: 1.5;">
+            Мы делаем этот проект своими руками и вкладываем в него душу. Здесь нет бездушной корпоративной машины — только реальная польза, честный подход и железобетонная уверенность в результате.
+        </p>
+        <div class="cards-list" style="margin-top: 15px; max-width: 520px;">
+            <div class="card" style="background: rgba(99, 102, 241, 0.1); border-color: rgba(99, 102, 241, 0.3);">
+                <h3 style="color: #818cf8;">🔥 Наша гарантия:</h3>
+                <p style="color: #f8fafc; font-size: 13px; margin-top: 4px;">Мы не подведем. Доведем каждого ученика до его заветных баллов и сделаем это стильно!</p>
+            </div>
+        </div>
+        <div style="font-size: 40px; margin-top: 15px;">💎</div>
+    </div>
+
+    <!-- КНОПКИ ПЕРЕКЛЮЧЕНИЯ -->
+    <div class="controls">
+        <button class="btn" id="prevBtn" onclick="goSlide(-1)" disabled>← Назад</button>
+        <div class="counter" id="counter">Слайд 1 из 10</div>
+        <button class="btn" id="nextBtn" onclick="goSlide(1)">Вперёд →</button>
+    </div>
+
+</div>
+
+<!-- МОДАЛКА ДЛЯ СКРИНШОТОВ ВОРДСТАТ -->
+<div id="modal" onclick="this.style.display='none'">
+    <img id="modal-img" src="">
+</div>
+
+<script>
+    var current = 1;
+    var total = 10;
+
+    function goSlide(dir) {
+        var next = current + dir;
+        if (next >= 1 && next <= total) {
+            document.getElementById('slide' + current).classList.remove('active');
+            document.getElementById('slide' + next).classList.add('active');
+            current = next;
+            
+            document.getElementById('counter').innerText = 'Слайд ' + current + ' из ' + total;
+            document.getElementById('prevBtn').disabled = (current === 1);
+            document.getElementById('nextBtn').disabled = (current === total);
+        }
+    }
+
+    function openFull(src) {
+        document.getElementById('modal-img').src = src;
+        document.getElementById('modal').style.display = 'flex';
+    }
+
+    // Управление стрелками на клавиатуре
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowRight' || e.key === 'Space') {
+            goSlide(1);
+        } else if (e.key === 'ArrowLeft') {
+            goSlide(-1);
+        } else if (e.key === 'Escape') {
+            document.getElementById('modal').style.display = 'none';
+        }
+    });
+</script>
+
+</body>
+</html>
